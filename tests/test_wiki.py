@@ -34,7 +34,7 @@ class TestWikiModule(unittest.TestCase):
         title = "Unittest Page"
         summary = "Page created by unittest"
         contents = "This page was created by a unittest on {}.".format(datetime.datetime.now())
-        webworld.wiki.write_page(title, contents, image_paths=[TEMPORARY_IMAGE_PATH], summary=summary)
+        webworld.wiki.send_page(title, contents, image_paths=[TEMPORARY_IMAGE_PATH], summary=summary)
 
 
 if __name__ == '__main__':

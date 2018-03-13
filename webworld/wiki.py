@@ -22,10 +22,10 @@ def create_page(world):
     matplotlib.image.imsave(TEMPORARY_IMAGE_PATH, color_map)
     LOGGER.info("Wrote world height map to disk as temporary image")
 
-    write_page(title, contents, summary=summary, image_paths=image_paths, wiki_filenames=wiki_filenames)
+    send_page(title, contents, summary=summary, image_paths=image_paths, wiki_filenames=wiki_filenames)
 
 
-def write_page(title, contents, summary="", image_paths=None, wiki_filenames=None):
+def send_page(title, contents, summary="", image_paths=None, wiki_filenames=None):
     if not wiki_filenames:
         wiki_filenames = [os.path.basename(path) for path in image_paths]
 

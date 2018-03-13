@@ -57,10 +57,12 @@ class World(object):
 
         tiles = np.empty_like(height_map, dtype=Tile)
 
+        max_height = np.amax(height_map)
+
         for i_row in range(height_map.shape[0]):
             for i_column in range(height_map.shape[1]):
                 height = height_map[i_row, i_column]
-                food = height_map[i_row, i_column]
+                food = max_height - height_map[i_row, i_column]
                 tile = Tile(height, food)
 
                 tiles[i_row, i_column] = tile
