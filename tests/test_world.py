@@ -22,17 +22,15 @@ class TestWorldModule(unittest.TestCase):
         self.assertEqual(tile.food, food)
 
     def test_world(self):
-        # From maps
+        # From map
         size = 5
         input_height_map = np.eye(size)
-        input_food_map = 2 * np.eye(size)
         water_level = 0.5
-        world = webworld.world.World.from_maps(input_height_map, input_food_map, water_level)
+        world = webworld.world.World.from_height_map(input_height_map, water_level)
         height_map = world.give_map(webworld.world.Quantity.HEIGHT)
-        food_map = world.give_map(webworld.world.Quantity.FOOD)
 
         self.assertEqual(height_map.shape, input_height_map.shape)
-        self.assertEqual(food_map.shape, input_food_map.shape)
+        self.assertEqual(world.water_level, water_level)
 
         # From shape
         height = 100
@@ -44,6 +42,7 @@ class TestWorldModule(unittest.TestCase):
 
         self.assertEqual(height_map.shape, (height, width))
         self.assertEqual(food_map.shape, (height, width))
+        self.assertEqual(world.water_level, water_level)
 
 
 if __name__ == '__main__':

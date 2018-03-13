@@ -8,6 +8,10 @@ import numpy as np
 LOGGER = logging.getLogger(__name__)
 
 
+def scale_map(noise_map):
+    return (noise_map - np.amin(noise_map)) / (np.amax(noise_map) - np.amin(noise_map))
+
+
 def noise_map_from_external(height, width, octaves=2, lacunarity=0.15, persistence=5):
     noise_map = np.zeros((height, width))
 
@@ -19,7 +23,9 @@ def noise_map_from_external(height, width, octaves=2, lacunarity=0.15, persisten
                                                        lacunarity=lacunarity, persistence=persistence)
 
     LOGGER.info("Created perlin noise map of size {}*{} using external module".format(width, height))
-    return noise_map
+
+    scaled_map = scale_map(noise_map)
+    return scaled_map
 
 
 def noise_map_from_direct_implementation(height, width, grid_size_count=9, grid_size_start=3, return_maps_dict=False):
@@ -70,12 +76,13 @@ def noise_map_from_direct_implementation(height, width, grid_size_count=9, grid_
         maps_array[:, :, i_size] = noise_map
 
     combined_noise_map = np.sum(maps_array, axis=2)
+    scaled_map = scale_map(combined_noise_map)
 
     LOGGER.info("Created perlin noise map of size {}*{} using direct implementation".format(width, height))
     if return_maps_dict:
-        return combined_noise_map, maps_dict
+        return scaled_map, maps_dict
     else:
-        return combined_noise_map
+        return scaled_map
 
 
 class _PerlinNoiseGrid:

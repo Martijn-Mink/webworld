@@ -3,9 +3,26 @@
 import logging
 import os
 
+import matplotlib.image
 import requests
 
+TEMPORARY_IMAGE_PATH = "temporary_image.png"
 LOGGER = logging.getLogger(__name__)
+
+
+def create_page(world):
+    image_paths = [TEMPORARY_IMAGE_PATH]
+    wiki_filenames = ["world.png"]
+
+    title = "World"
+    summary = "The world"
+    contents = "This is the world\n\n[[File:{}]]".format(wiki_filenames[0])
+
+    color_map = world.give_height_color_map()
+    matplotlib.image.imsave(TEMPORARY_IMAGE_PATH, color_map)
+    LOGGER.info("Wrote world height map to disk as temporary image")
+
+    write_page(title, contents, summary=summary, image_paths=image_paths, wiki_filenames=wiki_filenames)
 
 
 def write_page(title, contents, summary="", image_paths=None, wiki_filenames=None):
