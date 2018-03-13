@@ -1,11 +1,13 @@
 """This script creates a Matplotlib GUI with sliders to explore the dependency of the perlin noise map on it's
 parameters."""
 
-import numpy as np
 import inspect
+
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.widgets import Slider
-import noise
+
+import webworld.perlin
 
 N_PIXELS = 80
 SLIDER_HEIGHT = 0.05
@@ -117,29 +119,40 @@ class DynamicFigure(object):
         self.figure.canvas.draw_idle()
 
 
-def calculate_noise_map(octaves, lacunarity, persistence):
+def noise_map_from_external_wrapper(octaves, lacunarity, persistence):
     """Calculate the perlin noise map"""
 
     print("{}: {}".format('octaves', octaves))
     print("{}: {}".format('lacunarity', lacunarity))
     print("{}: {}".format('persistence', persistence))
 
-    # TODO: 0.5 offsets are needed, but their precise effect is unclear
-    noise_map = np.zeros((N_PIXELS, N_PIXELS))
-    for i in range(N_PIXELS):
-        for j in range(N_PIXELS):
-            noise_map[i, j] = noise.pnoise2(i + 0.5, j + 0.5, octaves=int(octaves), lacunarity=lacunarity,
-                                            persistence=persistence)
+    noise_map = webworld.perlin.noise_map_from_external(N_PIXELS, N_PIXELS, octaves=octaves,
+                                                        lacunarity=lacunarity, persistence=persistence)
+    return noise_map
+
+
+def noise_map_from_direct_implementation_wrapper(grid_size_count, grid_size_start):
+    """Calculate the perlin noise map"""
+
+    print("{}: {}".format('grid_size_count', grid_size_count, grid_size_count))
+    print("{}: {}".format('grid_size_start', grid_size_start, grid_size_start))
+
+    noise_map = webworld.perlin.noise_map_from_direct_implementation(N_PIXELS, N_PIXELS,
+                                                                     grid_size_count=grid_size_count,
+                                                                     grid_size_start=grid_size_start)
 
     return noise_map
 
 
 def main():
-    variables = [Variable('octaves', 2, 10, 2),
-                 Variable('lacunarity', 0, 1, 0.15),
-                 Variable('persistence', 0, 5, 5)]
+    # variables = [Variable('octaves', 2, 10, 2),
+    #              Variable('lacunarity', 0, 1, 0.15),
+    #              Variable('persistence', 0, 5, 5)]
+    # dynamic_array = DynamicArray(noise_map_from_external_wrapper, variables)
+    # DynamicFigure(dynamic_array)
 
-    dynamic_array = DynamicArray(calculate_noise_map, variables)
+    variables = [Variable('grid_size_count', 3, 20, 3), Variable('grid_size_start', 2, 25, 2)]
+    dynamic_array = DynamicArray(noise_map_from_direct_implementation_wrapper, variables)
     DynamicFigure(dynamic_array)
 
     plt.show()

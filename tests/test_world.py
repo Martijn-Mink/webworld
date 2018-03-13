@@ -1,9 +1,16 @@
 import unittest
-import webworld.world
+
 import numpy as np
+
+import webworld.log
+import webworld.world
 
 
 class TestWorldModule(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        webworld.log.setup_logger()
 
     def test_tile(self):
         height = 1

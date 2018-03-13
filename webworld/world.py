@@ -1,5 +1,6 @@
-import numpy
 import enum
+
+import numpy
 
 from . import perlin
 
@@ -35,7 +36,7 @@ class World(object):
     @classmethod
     def from_shape(cls, height, width, water_level):
 
-        noise_map = perlin.give_noise_map(height, width)
+        noise_map = perlin.noise_map_from_direct_implementation(height, width)
 
         # Construct tiles
         tiles = numpy.empty_like(noise_map, dtype=Tile)
